@@ -1,0 +1,60 @@
+@startuml
+skinparam linetype ortho
+
+
+entity "Photo" as Photo {
+  * id : int
+  --
+  filePath : string
+  fileName : string
+  importedAt : datetime
+  status : enum {keep, reject, undecided}
+}
+
+entity "ExifData" as Exif {
+  * id : int
+  --
+  cameraModel : string
+  focalLength : float
+  aperture : float
+  iso : int
+  shutterSpeed : float
+  width : int
+  height : int
+}
+
+entity "Collection" as Collection {
+  * id : int
+  --
+  name : string
+  createdAt : datetime
+}
+
+entity "NearDuplicateGroup" as NearDup {
+  * id : int
+  --
+  method : string  // e.g., perceptual hash
+  createdAt : datetime
+}
+
+entity "Score" as Score {
+  * id : int
+  --
+  type : string     // e.g., sharpness, exposure
+  value : float
+}
+
+entity "Style" as Style {
+  * id : int
+  --
+  name : string      // e.g., Portrait, Landscape
+  description : string
+}
+
+' --- Relationships ---
+Collection ||--o{ Photo : contains
+Photo ||--|| Exif : has
+Photo ||--o{ Score : evaluatedBy
+NearDup ||--o{ Photo : groups
+Photo }o--o{ Style : categorizedAs
+@enduml
