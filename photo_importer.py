@@ -55,9 +55,6 @@ class PhotoImporter:
                 if style_id:
                     self.db.assign_style(photo_id, style_id)
 
-        # Near-duplicate detection
-        self.duplicates.process_photo(photo_id, str(file))
-
         # Score image
         try:
             scores = self.scorer.score_and_store(photo_id, str(file))

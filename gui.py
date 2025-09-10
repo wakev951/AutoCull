@@ -53,6 +53,7 @@ class Sidebar(tk.Frame):
             self.dup_btn = tk.Button(self, text="Find Duplicates", command=self.find_duplicates)
             self.dup_btn.pack(padx=10, pady=10, anchor="n")
 
+
     # ----------------- Toggle -----------------
     def toggle(self):
         self.collapsed = not self.collapsed
