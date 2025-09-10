@@ -20,3 +20,7 @@ duplicates.py broken - missing methods. Add following code for test:
         self._log(f"[DEBUG] Processing single photo_id={photo_id} for duplicates.")
         self.find_duplicates_batch([{"id": photo_id, "file_path": file_path}])
 
+# Database
+PostgreSQL - create db `autocull_db`
+
+---
