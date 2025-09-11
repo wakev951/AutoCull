@@ -71,24 +71,31 @@ class AutoCullApp(tk.Tk):
     def update_layout(self):
         w, h = self.winfo_width(), self.winfo_height()
 
+        # Filmstrip height
+        fh = self.filmstrip.winfo_reqheight() or 120  # fallback default height
+
         # Left sidebar
         lw = self.left_sidebar.width if not self.left_sidebar.collapsed else 30
-        self.left_sidebar.place(x=0, y=0, width=lw, height=h)
+        self.left_sidebar.place(x=0, y=0, width=lw, height=h - fh)
         self.left_sidebar.lift()
 
         # Right sidebar
         rw = self.right_sidebar.width if not self.right_sidebar.collapsed else 30
-        self.right_sidebar.place(x=max(0, w - rw), y=0, width=rw, height=h)
+        self.right_sidebar.place(x=max(0, w - rw), y=0, width=rw, height=h - fh)
         self.right_sidebar.lift()
 
-        # Photo viewer takes the gap between sidebars
+        # Photo viewer fills between sidebars above filmstrip
         pv_x = lw
         pv_width = max(0, w - lw - rw)
-        self.photo_viewer.place(x=pv_x, y=0, width=pv_width, height=h)
+        self.photo_viewer.place(x=pv_x, y=0, width=pv_width, height=h - fh)
+
+        # Filmstrip always full width at bottom
+        self.filmstrip.place(x=0, y=h - fh, width=w, height=fh)
 
         # Update toggle icons
         self.left_sidebar.toggle_btn.config(text="⮞" if self.left_sidebar.collapsed else "⮜")
         self.right_sidebar.toggle_btn.config(text="⮜" if self.right_sidebar.collapsed else "⮞")
+
 
     # ---------- Menubar ----------
     def setup_menubar(self):
