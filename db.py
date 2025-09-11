@@ -142,3 +142,46 @@ class Database:
         finally:
             cursor.close()
 
+
+    def get_near_duplicate_groups(self):
+        """
+        Retrieve all near-duplicate groups with their associated photos.
+        :return: List of groups with photo IDs
+        """
+        query = "SELECT * FROM near_duplicate_groups"
+        groups = self.fetch(query)
+        for group in groups:
+            photos = self.fetch("""
+                SELECT p.* FROM photos p
+                JOIN near_duplicate_photos ndp ON p.id = ndp.photo_id
+                WHERE ndp.group_id=%s
+            """, (group["id"],))
+            group["photos"] = photos
+        return groups
+    
+    def get_photos_in_near_duplicate_group(self, group_id):
+        """
+        Retrieve all photos in a specific near-duplicate group.
+        :param group_id: ID of the near-duplicate group
+        :return: List of photos in the group
+        """
+        query = """
+            SELECT p.* FROM photos p
+            JOIN near_duplicate_photos ndp ON p.id = ndp.photo_id
+            WHERE ndp.group_id=%s
+        """
+        return self.fetch(query, (group_id,))
+    
+    def get_near_duplicate_groups_for_photo(self, photo_id):
+        """
+        Retrieve the near-duplicate group for a specific photo.
+        :param photo_id: ID of the photo
+        :return: Group details or None if not found
+        """
+        query = """
+            SELECT g.* FROM near_duplicate_groups g
+            JOIN near_duplicate_photos ndp ON g.id = ndp.group_id
+            WHERE ndp.photo_id=%s
+        """
+        groups = self.fetch(query, (photo_id,))
+        return groups[0] if groups else None
