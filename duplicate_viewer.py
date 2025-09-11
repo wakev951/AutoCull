@@ -127,22 +127,13 @@ class DuplicateViewer(tk.Frame):
             return
 
         # Fetch all groups the photo belongs to
-        query_groups = """
-            SELECT group_id FROM near_duplicate_photos
-            WHERE photo_id = %s
-        """
-        groups = self.db.fetch(query_groups, (photo_id,))
+        groups = self.db.get_groups_for_photo(photo_id)
         if not groups:
             return
 
         for g in groups:
             group_id = g["group_id"]
-            # Fetch all photos in this group
-            photos_in_group = self.db.fetch("""
-                SELECT p.id AS photo_id, p.file_name
-                FROM photos p
-                JOIN near_duplicate_photos ndp ON p.id = ndp.photo_id
-                WHERE ndp.group_id = %s
-            """, (group_id,))
+            photos_in_group = self.db.get_photos_in_group(group_id)
             for p in photos_in_group:
                 self.tree.insert("", "end", values=(group_id, p["photo_id"], p["file_name"]))
+

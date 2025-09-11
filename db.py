@@ -185,3 +185,22 @@ class Database:
         """
         groups = self.fetch(query, (photo_id,))
         return groups[0] if groups else None
+    
+    def get_groups_for_photo(self, photo_id):
+        """
+        Get all group IDs that a given photo belongs to.
+        """
+        query = "SELECT group_id FROM near_duplicate_photos WHERE photo_id=%s"
+        return self.fetch(query, (photo_id,))
+
+    def get_photos_in_group(self, group_id):
+        """
+        Get all photos (id, file_name) in a near-duplicate group.
+        """
+        query = """
+            SELECT p.id AS photo_id, p.file_name
+            FROM photos p
+            JOIN near_duplicate_photos ndp ON p.id = ndp.photo_id
+            WHERE ndp.group_id=%s
+        """
+        return self.fetch(query, (group_id,))
