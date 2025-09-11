@@ -51,10 +51,10 @@ class BaseThumbnailViewer(tk.Frame):
         """Call updates on linked viewers if parent has them."""
         master = self.master
         if hasattr(master, "exif_viewer") and master.exif_viewer:
-            master.exif_viewer.update_exif(photo_id)
+            master.exif_viewer.update_content(photo_id)
         if hasattr(master, "score_viewer") and master.score_viewer:
-            master.score_viewer.update_scores(photo_id)
+            master.score_viewer.update_content(photo_id)
         if hasattr(master, "filmstrip") and master.filmstrip:
             master.filmstrip.update_highlight(photo_id)
         if hasattr(master, "duplicate_viewer") and master.duplicate_viewer:
-            master.duplicate_viewer.update_duplicates(photo_id)
+            master.duplicate_viewer.update_content(photo_id)
